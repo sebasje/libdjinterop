@@ -62,11 +62,16 @@ track_data_blob track_data_blob::from_blob(const std::vector<std::byte>& blob)
     auto ptr = uncompressed.data();
     const auto end = ptr + uncompressed.size();
 
-    if (uncompressed.size() != 44)
+    // At least the six fields; Engine 3.x writes 24 more bytes after them
+    // (three zeroed doubles as observed), which decode_extra() keeps and
+    // to_blob() writes back, so a record is not rewritten shorter than it
+    // was read. Exactly 44 used to be required, and every track a 3.x
+    // player had touched then read as having no sample rate at all.
+    if (uncompressed.size() < 44)
     {
         throw std::invalid_argument{
-            "Track data blob doesn't have expected decompressed length of 28 "
-            "bytes"};
+            "Track data blob is shorter than the expected decompressed "
+            "length of 44 bytes"};
     }
 
     track_data_blob result{};
