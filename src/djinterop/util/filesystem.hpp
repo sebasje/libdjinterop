@@ -23,7 +23,8 @@
 
 namespace djinterop::util
 {
-/// Returns a path as a UTF-8 encoded string, on all platforms.
+/// Returns a path as UTF-8 encoded data in a `std::string` (note: not
+/// `std::u8string`), on all platforms.
 ///
 /// Use this for anything handed to SQLite or put in a message.
 /// `std::filesystem::path::string()` returns the ANSI code page on Windows.
